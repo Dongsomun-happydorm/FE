@@ -16,7 +16,7 @@ export default function FloorToggle({ floors, activeFloor, onFloorChange }: Floo
             className={`flex h-[30px] shrink-0 items-center justify-center rounded-full px-3 typography-body2-regular transition-colors ${
               isActive
                 ? 'bg-primary-500 text-gray-50 font-medium'
-                : 'border border-gray-100 bg-gray-50 text-gray-600'
+                : 'border-[0.5px] border-gray-100 bg-gray-50 text-gray-600 hover:border-primary-500 hover:text-primary-500'
             }`}
           >
             {floor}F
