@@ -1,9 +1,7 @@
-function App() {
+import React from 'react'
+
+export default function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <h1 className="text-3xl font-bold text-gray-900">Dongsomun HappyDorm</h1>
-    </div>
+    <div className='typography-h1 flex flex-col h-dvh items-center justify-center text-primary-500'>동소문행복기숙사</div>
   )
 }
-
-export default App

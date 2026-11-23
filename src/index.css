@@ -1,1 +1,145 @@
 @import 'tailwindcss';
+
+@theme {
+  /* ── Font ── */
+  --font-sans: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont,
+    system-ui, sans-serif;
+
+  /* ── Primary (Coral Red) ── */
+  --color-primary-50: #fff4f1;
+  --color-primary-100: #ffe4dd;
+  --color-primary-200: #ffc9bb;
+  --color-primary-300: #ffa792;
+  --color-primary-400: #ff8064;
+  --color-primary-500: #ff5b3a;
+  --color-primary-600: #de4024;
+  --color-primary-700: #ba2d19;
+  --color-primary-800: #8f2115;
+  --color-primary-900: #661710;
+
+  /* ── Secondary (Blue) ── */
+  --color-secondary-50: #f0f8ff;
+  --color-secondary-100: #dceeff;
+  --color-secondary-200: #b7dcff;
+  --color-secondary-300: #8ac7ff;
+  --color-secondary-400: #57b2fd;
+  --color-secondary-500: #309ceb;
+  --color-secondary-600: #0283cd;
+  --color-secondary-700: #006fac;
+  --color-secondary-800: #005583;
+  --color-secondary-900: #003c5d;
+
+  /* ── Neutral Gray ── */
+  --color-gray-white: #ffffff;
+  --color-gray-black: #000000;
+  --color-gray-50: #fcfcfd;
+  --color-gray-100: #f8f9fa;
+  --color-gray-200: #e9ecef;
+  --color-gray-300: #dee2e6;
+  --color-gray-400: #ced4da;
+  --color-gray-500: #adb5bd;
+  --color-gray-600: #6c757d;
+  --color-gray-700: #495057;
+  --color-gray-800: #343a40;
+  --color-gray-900: #212529;
+
+  /* ── Status ── */
+  --color-success-100: #dcfce7;
+  --color-success-500: #22c55e;
+  --color-error-100: #fee2e2;
+  --color-error-500: #ef4444;
+
+  /* ── Typography: font size + line height ── */
+  --text-h1: 60px;
+  --text-h1--line-height: 72px;
+  --text-h2: 48px;
+  --text-h2--line-height: 64px;
+  --text-h3: 40px;
+  --text-h3--line-height: 48px;
+  --text-subtitle1: 28px;
+  --text-subtitle1--line-height: 40px;
+  --text-subtitle2: 18px;
+  --text-subtitle2--line-height: 28px;
+  --text-body1: 18px;
+  --text-body1--line-height: 28px;
+  --text-body2: 16px;
+  --text-body2--line-height: 24px;
+  --text-caption: 12px;
+  --text-caption--line-height: 18px;
+
+  /* ── Border Radius ── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ── Shadow ── */
+  --shadow-1: 0px 0px 1px 0px rgba(0, 0, 0, 0.32), 0px 4px 6px 0px rgba(0, 0, 0, 0.2);
+  --shadow-2: 0px 0px 1px 0px rgba(0, 0, 0, 0.08), 0px 2px 2px 0px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Semantic typography utilities ──
+   Usage: className="typography-h1"  (size + line-height + weight all-in-one)
+   These complement text-{scale} + font-{weight} for one-off overrides.        */
+@layer utilities {
+  .typography-h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    font-weight: 700;
+  }
+  .typography-h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    font-weight: 700;
+  }
+  .typography-h3 {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: 500;
+  }
+  .typography-subtitle1 {
+    font-size: var(--text-subtitle1);
+    line-height: var(--text-subtitle1--line-height);
+    font-weight: 400;
+  }
+  .typography-subtitle2 {
+    font-size: var(--text-subtitle2);
+    line-height: var(--text-subtitle2--line-height);
+    font-weight: 700;
+  }
+  .typography-body1-semibold {
+    font-size: var(--text-body1);
+    line-height: var(--text-body1--line-height);
+    font-weight: 600;
+  }
+  .typography-body1-medium {
+    font-size: var(--text-body1);
+    line-height: var(--text-body1--line-height);
+    font-weight: 500;
+  }
+  .typography-body2-semibold {
+    font-size: var(--text-body2);
+    line-height: var(--text-body2--line-height);
+    font-weight: 600;
+  }
+  .typography-body2-medium {
+    font-size: var(--text-body2);
+    line-height: var(--text-body2--line-height);
+    font-weight: 500;
+  }
+  .typography-body2-regular {
+    font-size: var(--text-body2);
+    line-height: var(--text-body2--line-height);
+    font-weight: 400;
+  }
+  .typography-caption {
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
+    font-weight: 400;
+  }
+}
+
+* {
+  font-family: var(--font-sans);
+}
