@@ -1,4 +1,4 @@
-import locationIcon from '@/assets/icons/icon-location-primary.svg'
+import LocationPinIcon from './icons/LocationPinIcon'
 import profileIcon from '@/assets/icons/icon-profile.svg'
 import MoreIcon from '@/components/icons/MoreIcon'
 
@@ -11,7 +11,7 @@ export default function Header({ building, floor }: HeaderProps) {
   return (
     <div className="flex h-[54px] items-center justify-between bg-white px-4">
       <div className="flex items-center gap-2">
-        <img src={locationIcon} alt="location" className="size-6" />
+        <LocationPinIcon/>
         <div className="flex items-center gap-1">
           <span className="typography-body1-semibold text-gray-900 whitespace-nowrap">
             {building} {floor}층
