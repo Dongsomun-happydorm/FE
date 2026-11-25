@@ -1,26 +1,30 @@
-import LocationPinIcon from './icons/LocationPinIcon'
+import LocationPinIcon from '@/components/icons/LocationPinIcon'
 import profileIcon from '@/assets/icons/icon-profile.svg'
-import MoreIcon from '@/components/icons/MoreIcon'
+import ZoneDropdown from '@/components/ZoneDropdown'
+import { BUILDING_NAME, ZONE_OPTIONS } from '@/constants/building'
+import { useBuildingStore } from '@/stores/buildingStore'
 
-interface HeaderProps {
-  building: string
-  floor: number
-}
+export default function Header() {
+  const { selectedZone, activeFloor, setZone } = useBuildingStore()
 
-export default function Header({ building, floor }: HeaderProps) {
   return (
-    <div className="flex h-[54px] items-center justify-between bg-white px-4">
+    <div className="flex h-13.5 items-center justify-between bg-white px-4">
       <div className="flex items-center gap-2">
-        <LocationPinIcon/>
+        <LocationPinIcon />
         <div className="flex items-center gap-1">
           <span className="typography-body1-semibold text-gray-900 whitespace-nowrap">
-            {building} {floor}층
+            {BUILDING_NAME} {selectedZone} {activeFloor}
           </span>
-          <MoreIcon />
+          <ZoneDropdown
+            options={[...ZONE_OPTIONS]}
+            value={selectedZone}
+            onChange={setZone}
+            showLabel={false}
+          />
         </div>
       </div>
       <div className="flex size-7 items-center justify-center rounded-full bg-gray-100">
-        <img src={profileIcon} alt="프로필" className="size-[21px]" />
+        <img src={profileIcon} alt="프로필" className="size-5.25" />
       </div>
     </div>
   )

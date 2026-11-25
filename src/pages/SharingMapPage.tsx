@@ -5,31 +5,31 @@ import FloorToggle from '@/components/FloorToggle'
 import FloorMap from '@/components/FloorMap'
 import FloatingButton from '@/components/FloatingButton'
 import SharingStatusCards from '@/components/SharingStatusCards'
+import { FLOORS_BY_ZONE } from '@/constants/building'
+import { useBuildingStore } from '@/stores/buildingStore'
 
 const TABS = [
   { id: 'map', label: '나눔 지도' },
   { id: 'list', label: '나눔 목록' },
 ]
 
-const FLOORS = [2, 3, 4, 5, 6, 7, 8, 9, 10]
-
 export default function SharingMapPage() {
   const [activeTab, setActiveTab] = useState('map')
-  const [activeFloor, setActiveFloor] = useState(4)
+  const { selectedZone, activeFloor, setFloor } = useBuildingStore()
+  const floors = FLOORS_BY_ZONE[selectedZone]
 
   return (
     <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-white">
-      <Header building="동소문행복기숙사 B동" floor={activeFloor} />
+      <Header />
 
       <TabBar tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
       <FloorToggle
-        floors={FLOORS}
+        floors={floors}
         activeFloor={activeFloor}
-        onFloorChange={setActiveFloor}
+        onFloorChange={setFloor}
       />
 
-      {/* 지도 영역 */}
       <div className="relative flex-1 overflow-hidden">
         {activeTab === 'map' ? (
           <FloorMap />
