@@ -13,7 +13,7 @@ export interface SharingItem {
   id: string
   ownerId: string
   building: string
-  floor: number
+  floor: string
   name: string
   quantity: number
   unit: string
@@ -25,7 +25,7 @@ export interface SharingItem {
 }
 
 const koreanDate = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul', dateStyle: 'short' })
-const defaults = { building: BUILDING, floor: 4, unit: '개', memo: '', images: [placeholder] }
+const defaults = { building: BUILDING, floor: '4F', unit: '개', memo: '', images: [placeholder] }
 const paper = { name: '두루마리 휴지', quantity: 1, location: '휴게실 안쪽 책상 위' }
 
 export function createMockItems(now = new Date()): SharingItem[] {
@@ -77,7 +77,7 @@ export function createMockItems(now = new Date()): SharingItem[] {
       ...defaults,
       id: 'hangers',
       ownerId: 'user02',
-      floor: 3,
+      floor: '3F',
       name: '옷걸이',
       quantity: 4,
       location: '휴게실 선반 위',
@@ -88,7 +88,7 @@ export function createMockItems(now = new Date()): SharingItem[] {
       ...defaults,
       id: 'tissues',
       ownerId: 'user03',
-      floor: 5,
+      floor: '5F',
       name: '각티슈',
       quantity: 2,
       location: '휴게실 테이블 위',
@@ -113,7 +113,7 @@ export function newestFirst(items: SharingItem[]) {
 export function itemsForToday(
   items: SharingItem[],
   building: string,
-  floor: number,
+  floor: string,
   now = new Date()
 ) {
   const today = koreanDate.format(now)
