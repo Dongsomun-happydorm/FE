@@ -1,8 +1,6 @@
 import placeholder from '@/assets/list/item-placeholder.png'
 import grapes from '@/assets/list/shine-muscat.png'
 
-export const BUILDING = 'B동'
-export const FLOORS = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 export const TABS = [
   { id: 'map', label: '나눔 지도' },
   { id: 'list', label: '나눔 목록' },
@@ -25,7 +23,7 @@ export interface SharingItem {
 }
 
 const koreanDate = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul', dateStyle: 'short' })
-const defaults = { building: BUILDING, floor: '4F', unit: '개', memo: '', images: [placeholder] }
+const defaults = { building: 'B동', floor: '4F', unit: '개', memo: '', images: [placeholder] }
 const paper = { name: '두루마리 휴지', quantity: 1, location: '휴게실 안쪽 책상 위' }
 
 export function createMockItems(now = new Date()): SharingItem[] {

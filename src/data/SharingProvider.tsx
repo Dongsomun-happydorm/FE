@@ -1,13 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import { BUILDING, createMockItems } from './sharingItems'
+import { createMockItems } from './sharingItems'
 import type { SharingItem } from './sharingItems'
 import { readSharingItems, saveSharingItem } from './sharingStorage'
 
 interface SharingContextValue {
-  building: string
-  floor: number
-  setFloor: (floor: number) => void
   items: SharingItem[]
   addItem: (item: SharingItem) => Promise<void>
 }
@@ -21,7 +18,6 @@ export function useSharing() {
 }
 
 export default function SharingProvider({ children }: { children: ReactNode }) {
-  const [floor, setFloor] = useState(4)
   const [mockItems] = useState(createMockItems)
   const [registrations, setRegistrations] = useState<SharingItem[]>([])
 
@@ -51,9 +47,6 @@ export default function SharingProvider({ children }: { children: ReactNode }) {
   return (
     <SharingContext.Provider
       value={{
-        building: BUILDING,
-        floor,
-        setFloor,
         items: [...registrations, ...mockItems],
         addItem,
       }}
