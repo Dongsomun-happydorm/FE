@@ -111,7 +111,7 @@ export default function SharingRegisterPage() {
 
   return (
     <div className="bg-gray-white flex h-dvh w-full flex-col">
-      <div className="shrink-0 pt-[47px]">
+      <div className="shrink-0">
         <Header building={`동소문행복기숙사 ${building}`} floor={floor} />
         <TabBar
           tabs={TABS}

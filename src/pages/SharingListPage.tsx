@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import FloorToggle from '@/components/FloorToggle'
 import Header from '@/components/Header'
-import PhoneStatusBar from '@/components/PhoneStatusBar'
 import TabBar from '@/components/TabBar'
-import ItemList from '@/components/icons/ItemList'
+import ItemList from '@/components/ItemList'
 import { useSharing } from '@/data/SharingProvider'
 import { CURRENT_USER_ID, FLOORS, TABS, itemsForToday } from '@/data/sharingItems'
 
@@ -14,7 +13,6 @@ export default function SharingListPage() {
 
   return (
     <div className="bg-gray-white flex h-dvh w-full flex-col">
-      <PhoneStatusBar />
       <div className="shrink-0">
         <Header building={`동소문행복기숙사 ${building}`} floor={floor} />
         <TabBar

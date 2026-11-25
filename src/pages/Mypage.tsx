@@ -1,8 +1,7 @@
-import profileIcon from '@/assets/mypage/profile.svg'
+import profileIcon from '@/assets/icons/icon-profile.svg'
 
 import MoreIcon from '@/components/icons/MoreIcon'
-import ItemList from '@/components/icons/ItemList'
-import PhoneStatusBar from '@/components/PhoneStatusBar'
+import ItemList from '@/components/ItemList'
 import { useSharing } from '@/data/SharingProvider'
 import { CURRENT_USER_ID, newestFirst } from '@/data/sharingItems'
 
@@ -36,8 +35,6 @@ export default function Mypage({ onBack = () => window.history.back() }: MypageP
 
   return (
     <div className="bg-gray-white flex h-dvh w-full flex-col">
-      <PhoneStatusBar />
-
       {/* 마이페이지 헤더 */}
       <header className="bg-gray-white relative flex h-[60px] shrink-0 items-center justify-center">
         <button

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import placeholder from '@/assets/mypage/item-placeholder.png'
+import placeholder from '@/assets/list/item-placeholder.png'
 
 export type ItemStatus = 'sharing' | 'completed' | 'reserved' | 'closed'
 

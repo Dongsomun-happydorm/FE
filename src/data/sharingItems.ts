@@ -1,4 +1,4 @@
-import placeholder from '@/assets/mypage/item-placeholder.png'
+import placeholder from '@/assets/list/item-placeholder.png'
 import grapes from '@/assets/list/shine-muscat.png'
 
 export const BUILDING = 'B동'
