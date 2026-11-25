@@ -26,7 +26,7 @@ export default function SharingListPage() {
             if (tab === 'map') navigate('/')
           }}
         />
-        <div className="pt-3">
+        <div>
           <FloorToggle floors={floors} activeFloor={activeFloor} onFloorChange={setFloor} />
         </div>
       </div>

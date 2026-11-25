@@ -6,7 +6,7 @@ interface FloorToggleProps {
 
 export default function FloorToggle({ floors, activeFloor, onFloorChange }: FloorToggleProps) {
   return (
-    <div className="flex items-center gap-3 overflow-x-auto px-4 py-3 scrollbar-none">
+    <div className="flex items-center gap-3 overflow-x-auto px-4 py-4 scrollbar-none">
       {floors.map((floor) => {
         const isActive = floor === activeFloor
         return (
