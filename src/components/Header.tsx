@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import LocationPinIcon from '@/components/icons/LocationPinIcon'
 import profileIcon from '@/assets/icons/icon-profile.svg'
 import ZoneDropdown from '@/components/ZoneDropdown'
@@ -23,9 +24,13 @@ export default function Header() {
           />
         </div>
       </div>
-      <div className="flex size-7 items-center justify-center rounded-full bg-gray-100">
-        <img src={profileIcon} alt="프로필" className="size-5.25" />
-      </div>
+      <Link
+        to="/mypage"
+        aria-label="마이페이지"
+        className="flex size-7 items-center justify-center rounded-full bg-gray-100"
+      >
+        <img src={profileIcon} alt="" className="size-5.25" />
+      </Link>
     </div>
   )
 }
