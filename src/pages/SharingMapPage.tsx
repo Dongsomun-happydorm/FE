@@ -21,15 +21,15 @@ export default function SharingMapPage() {
   return (
     <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-white">
       <Header />
-
       <TabBar tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
-
       <FloorToggle
         floors={floors}
         activeFloor={activeFloor}
         onFloorChange={setFloor}
       />
-
+      <p className="typography-caption px-4  text-gray-500">
+        오늘 하루동안 기숙사 휴게실에서 오간 나눔을 한눈에 확인해 보세요
+      </p>
       <div className="relative flex-1 overflow-hidden">
         {activeTab === 'map' ? (
           <FloorMap />
@@ -38,9 +38,7 @@ export default function SharingMapPage() {
             나눔 목록
           </div>
         )}
-
         <FloatingButton label="나눔 등록" />
-
         <SharingStatusCards sharingCount={2} completedCount={2} />
       </div>
     </div>
