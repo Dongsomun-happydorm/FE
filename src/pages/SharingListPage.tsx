@@ -4,17 +4,21 @@ import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
 import ItemList from '@/components/ItemList'
 import { useSharing } from '@/data/SharingProvider'
-import { CURRENT_USER_ID, FLOORS, TABS, itemsForToday } from '@/data/sharingItems'
+import { CURRENT_USER_ID, TABS, itemsForToday } from '@/data/sharingItems'
+import { FLOORS_BY_ZONE } from '@/constants/building'
+import { useBuildingStore } from '@/stores/buildingStore'
 
 export default function SharingListPage() {
   const navigate = useNavigate()
-  const { building, floor, setFloor, items } = useSharing()
-  const visibleItems = itemsForToday(items, building, floor)
+  const { selectedZone, activeFloor, setFloor } = useBuildingStore()
+  const floors = FLOORS_BY_ZONE[selectedZone]
+  const { items } = useSharing()
+  const visibleItems = itemsForToday(items, selectedZone, activeFloor)
 
   return (
     <div className="bg-gray-white flex h-dvh w-full flex-col">
       <div className="shrink-0">
-        <Header building={`동소문행복기숙사 ${building}`} floor={floor} />
+        <Header />
         <TabBar
           tabs={TABS}
           activeTab="list"
@@ -23,15 +27,17 @@ export default function SharingListPage() {
           }}
         />
         <div className="pt-3">
-          <FloorToggle floors={FLOORS} activeFloor={floor} onFloorChange={setFloor} />
+          <FloorToggle floors={floors} activeFloor={activeFloor} onFloorChange={setFloor} />
         </div>
       </div>
       <main className="min-h-0 flex-1 overflow-y-auto">
-        <p className="typography-caption px-4 pt-1 pb-2 text-gray-500">
+        {visibleItems.length !== 0 && (
+          <p className="typography-caption px-4 pt-1 pb-2 text-gray-500">
           오늘 하루동안 기숙사 휴게실에서 오간 나눔을 한눈에 확인해 보세요
         </p>
+        )}
         {visibleItems.length ? (
-          <ul aria-label={`${floor}층 나눔 물품`}>
+          <ul aria-label={`${activeFloor} 나눔 물품`}>
             {visibleItems.map((item) => (
               <ItemList
                 key={item.id}
@@ -47,7 +53,7 @@ export default function SharingListPage() {
             ))}
           </ul>
         ) : (
-          <p className="typography-body2-regular px-4 py-10 text-center text-gray-600">
+          <p className="flex flex-col typography-body2-regular pt-50 text-center text-gray-500">
             아직 해당 층에 등록된 나눔 물품이 없어요.
           </p>
         )}
