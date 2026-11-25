@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
 import FloorToggle from '@/components/FloorToggle'
@@ -6,42 +6,38 @@ import FloorMap from '@/components/FloorMap'
 import FloatingButton from '@/components/FloatingButton'
 import SharingStatusCards from '@/components/SharingStatusCards'
 
-const TABS = [
-  { id: 'map', label: '나눔 지도' },
-  { id: 'list', label: '나눔 목록' },
-]
-
-const FLOORS = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+import { useSharing } from '@/data/SharingProvider'
+import { FLOORS, TABS, itemsForToday } from '@/data/sharingItems'
 
 export default function SharingMapPage() {
-  const [activeTab, setActiveTab] = useState('map')
-  const [activeFloor, setActiveFloor] = useState(4)
+  const navigate = useNavigate()
+  const { building, floor, setFloor, items } = useSharing()
+  const floorItems = itemsForToday(items, building, floor)
 
   return (
     <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-white">
-      <Header building="동소문행복기숙사 B동" floor={activeFloor} />
+      <Header building={`동소문행복기숙사 ${building}`} floor={floor} />
 
-      <TabBar tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
-
-      <FloorToggle
-        floors={FLOORS}
-        activeFloor={activeFloor}
-        onFloorChange={setActiveFloor}
+      <TabBar
+        tabs={TABS}
+        activeTab="map"
+        onTabChange={(tab) => {
+          if (tab === 'list') navigate('/list')
+        }}
       />
+
+      <FloorToggle floors={FLOORS} activeFloor={floor} onFloorChange={setFloor} />
 
       {/* 지도 영역 */}
       <div className="relative flex-1 overflow-hidden">
-        {activeTab === 'map' ? (
-          <FloorMap />
-        ) : (
-          <div className="flex h-full items-center justify-center typography-body1-medium text-gray-500">
-            나눔 목록
-          </div>
-        )}
+        <FloorMap />
 
-        <FloatingButton label="나눔 등록" />
+        <FloatingButton label="나눔 등록" onClick={() => navigate('/register')} />
 
-        <SharingStatusCards sharingCount={2} completedCount={2} />
+        <SharingStatusCards
+          sharingCount={floorItems.filter((item) => item.status === 'sharing').length}
+          completedCount={floorItems.filter((item) => item.status === 'completed').length}
+        />
       </div>
     </div>
   )

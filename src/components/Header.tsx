@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import locationIcon from '@/assets/icons/icon-location-primary.svg'
 import profileIcon from '@/assets/icons/icon-profile.svg'
 import MoreIcon from '@/components/icons/MoreIcon'
@@ -19,9 +20,13 @@ export default function Header({ building, floor }: HeaderProps) {
           <MoreIcon />
         </div>
       </div>
-      <div className="flex size-7 items-center justify-center rounded-full bg-gray-100">
-        <img src={profileIcon} alt="프로필" className="size-[21px]" />
-      </div>
+      <Link
+        to="/mypage"
+        aria-label="마이페이지"
+        className="flex size-7 items-center justify-center rounded-full bg-gray-100"
+      >
+        <img src={profileIcon} alt="" className="size-[21px]" />
+      </Link>
     </div>
   )
 }
