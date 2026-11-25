@@ -5,9 +5,10 @@ interface ZoneDropdownProps {
   options: string[]
   value: string
   onChange: (value: string) => void
+  showLabel?: boolean
 }
 
-export default function ZoneDropdown({ options, value, onChange }: ZoneDropdownProps) {
+export default function ZoneDropdown({ options, value, onChange, showLabel = true }: ZoneDropdownProps) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -23,35 +24,36 @@ export default function ZoneDropdown({ options, value, onChange }: ZoneDropdownP
   }, [open])
 
   return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center gap-1"
-      >
+    <div className="flex items-center gap-1">
+      {showLabel && (
         <span className="typography-body1-semibold text-gray-900 whitespace-nowrap">{value}</span>
-        <MoreIcon />
-      </button>
-
-      {open && (
-        <div className="absolute left-0 top-full z-50 mt-1 w-[66px] overflow-hidden rounded-[12px] border border-gray-100 bg-white shadow-[0px_0px_1px_0px_rgba(0,0,0,0.08),0px_2px_2px_0px_rgba(0,0,0,0.06)]">
-          <div className="flex flex-col gap-0.5 p-2">
-            {options.map((option) => (
-              <button
-                key={option}
-                onClick={() => {
-                  onChange(option)
-                  setOpen(false)
-                }}
-                className={`flex h-10 w-full items-center justify-center typography-body2-medium text-[#2b2b2b] transition-colors ${
-                  option === value ? 'rounded-[8px] bg-gray-100' : ''
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
       )}
+      <div ref={ref} className="relative">
+        <button onClick={() => setOpen((prev) => !prev)} className="flex items-center">
+          <MoreIcon />
+        </button>
+
+        {open && (
+          <div className="absolute left-1/2 top-full z-50 mt-1 w-16.5 -translate-x-1/2 overflow-hidden rounded-lg border border-gray-100 bg-white shadow-2">
+            <div className="flex flex-col gap-0.5 p-2">
+              {options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    onChange(option)
+                    setOpen(false)
+                  }}
+                  className={`flex h-10 w-full items-center justify-center typography-body2-medium text-[#2b2b2b] transition-colors hover:bg-gray-100 rounded-md ${
+                    option === value ? 'bg-gray-100' : ''
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
