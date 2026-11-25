@@ -30,7 +30,7 @@ export default function ZoneDropdown({ options, value, onChange, showLabel = tru
       )}
       <div ref={ref} className="relative">
         <button onClick={() => setOpen((prev) => !prev)} className="flex items-center">
-          <MoreIcon />
+          <MoreIcon className={`size-5.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
         </button>
 
         {open && (
