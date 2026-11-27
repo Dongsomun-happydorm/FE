@@ -3,6 +3,7 @@ import floorMapImage from '@/assets/map/floor-map.png'
 import LocationPinIcon from '@/components/icons/LocationPinIcon'
 import StatusChip from '@/components/StatusChip'
 import ItemList from '@/components/ItemList'
+import SubButton from '@/components/SubButton'
 
 export interface LocationPin {
   id: string
@@ -110,6 +111,12 @@ export default function FloorMap({ pins = defaultPins }: FloorMapProps) {
               isOwner={selectedPin.isOwner}
             />
           </ul>
+          {selectedPin.type === 'sharing' && !selectedPin.isOwner && (
+            <div className="mt-4 flex gap-2">
+              <SubButton label="예약하기" variant="main" className="flex-1" />
+              <SubButton label="수령완료" variant="sub" className="flex-1" />
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -32,7 +32,7 @@ export default function SubButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex w-[170px] items-center justify-center rounded-xl px-[47px] py-[19px] typography-body1-semibold transition-colors ${
+      className={`flex h-15 w-42.5 items-center justify-center rounded-xl px-11.75 typography-body1-semibold transition-colors ${
         disabled
           ? `${styles.disabled} cursor-not-allowed`
           : `${styles.base} ${styles.hover}`
