@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
@@ -39,6 +40,7 @@ export default function SharingMapPage() {
   const floors = FLOORS_BY_ZONE[selectedZone]
   const { items } = useSharing()
   const floorItems = itemsForToday(items, selectedZone, activeFloor)
+  const [pinSelected, setPinSelected] = useState(false)
   const pins = floorItems
     .filter((item) => item.status === 'sharing' || item.status === 'completed')
     .map(itemToPin)
@@ -58,8 +60,8 @@ export default function SharingMapPage() {
         오늘 하루동안 기숙사 휴게실에서 오간 나눔을 한눈에 확인해 보세요
       </p>
       <div className="relative flex-1 overflow-hidden pt-50">
-        <FloorMap pins={pins} />
-        <FloatingButton label="나눔 등록" onClick={() => navigate('/register')} />
+        <FloorMap pins={pins} onPinSelect={(id) => setPinSelected(id !== null)} />
+        {!pinSelected && <FloatingButton label="나눔 등록" onClick={() => navigate('/register')} />}
         <SharingStatusCards
           sharingCount={floorItems.filter((item) => item.status === 'sharing').length}
           completedCount={floorItems.filter((item) => item.status === 'completed').length}

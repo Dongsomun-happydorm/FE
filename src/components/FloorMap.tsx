@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import floorMapImage from '@/assets/map/floor-map.png'
 import LocationPinIcon from '@/components/icons/LocationPinIcon'
 import StatusChip from '@/components/StatusChip'
@@ -20,6 +20,7 @@ export interface LocationPin {
 
 interface FloorMapProps {
   pins?: LocationPin[]
+  onPinSelect?: (id: string | null) => void
 }
 
 const LOUNGE_ZONE = { left: 52, top: 24, width: 20, height: 34 }
@@ -35,12 +36,22 @@ function getChipConfig(type: 'sharing' | 'completed', isOwner: boolean) {
   return { label: isOwner ? '나눔 완료' : '나눔 마감', variant: 'secondary' as const }
 }
 
-export default function FloorMap({ pins = defaultPins }: FloorMapProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+export default function FloorMap({ pins = defaultPins, onPinSelect }: FloorMapProps) {
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const [lockedId, setLockedId] = useState<string | null>(null)
+  const selectedId = lockedId ?? hoveredId
   const selectedPin = pins.find((p) => p.id === selectedId) ?? null
 
+  useEffect(() => {
+    onPinSelect?.(selectedId)
+  }, [selectedId])
+
+  function lock(id: string | null) {
+    setLockedId(id)
+  }
+
   return (
-    <div className="relative w-full" style={{ aspectRatio: '1097 / 634' }} onClick={() => setSelectedId(null)}>
+    <div className="relative w-full" style={{ aspectRatio: '1097 / 634' }} onClick={() => lock(null)}>
       <img
         src={floorMapImage}
         alt="층 평면도"
@@ -66,15 +77,14 @@ export default function FloorMap({ pins = defaultPins }: FloorMapProps) {
               className="absolute -translate-x-1/2 -translate-y-full cursor-pointer"
               style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
               onPointerEnter={(e) => {
-                if (e.pointerType === 'mouse') setSelectedId(pin.id)
+                if (e.pointerType === 'mouse') setHoveredId(pin.id)
               }}
               onPointerLeave={(e) => {
-                if (e.pointerType === 'mouse')
-                  setSelectedId((prev) => (prev === pin.id ? null : prev))
+                if (e.pointerType === 'mouse') setHoveredId(null)
               }}
               onClick={(e) => {
                 e.stopPropagation()
-                setSelectedId((prev) => (prev === pin.id ? null : pin.id))
+                lock(lockedId === pin.id ? null : pin.id)
               }}
             >
               <div
