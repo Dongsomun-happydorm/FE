@@ -1,30 +1,45 @@
+import { useState } from 'react'
 import floorMapImage from '@/assets/map/floor-map.png'
 import LocationPinIcon from '@/components/icons/LocationPinIcon'
+import StatusChip from '@/components/StatusChip'
+import ItemList from '@/components/ItemList'
 
-interface LocationPin {
+export interface LocationPin {
   id: string
   x: number
   y: number
   type: 'sharing' | 'completed'
+  name: string
+  quantity: number
+  unit: string
+  location?: string
+  image?: string | Blob
+  isOwner: boolean
 }
 
 interface FloorMapProps {
   pins?: LocationPin[]
 }
 
-// 전체 이미지 대비 휴게실 영역 비율 (시각적으로 확인 후 미세 조정 필요)
 const LOUNGE_ZONE = { left: 52, top: 24, width: 20, height: 34 }
 
-// pin x, y는 휴게실 영역 내 0~100% 기준
 const defaultPins: LocationPin[] = [
-  { id: '1', x: 50, y: 30, type: 'sharing' },
-  { id: '2', x: 25, y: 50, type: 'sharing' },
-  { id: '3', x: 75, y: 50, type: 'completed' },
+  { id: '1', x: 50, y: 30, type: 'sharing', name: '물품1', quantity: 1, unit: '개', isOwner: false },
+  { id: '2', x: 25, y: 50, type: 'sharing', name: '물품2', quantity: 2, unit: '개', isOwner: true },
+  { id: '3', x: 75, y: 50, type: 'completed', name: '물품3', quantity: 1, unit: '개', isOwner: false },
 ]
 
+function getChipConfig(type: 'sharing' | 'completed', isOwner: boolean) {
+  if (type === 'sharing') return { label: isOwner ? '내가 나눔중' : '나눔중', variant: 'primary' as const }
+  return { label: isOwner ? '나눔 완료' : '나눔 마감', variant: 'secondary' as const }
+}
+
 export default function FloorMap({ pins = defaultPins }: FloorMapProps) {
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const selectedPin = pins.find((p) => p.id === selectedId) ?? null
+
   return (
-    <div className="relative w-full" style={{ aspectRatio: '1097 / 634' }}>
+    <div className="relative w-full" style={{ aspectRatio: '1097 / 634' }} onClick={() => setSelectedId(null)}>
       <img
         src={floorMapImage}
         alt="층 평면도"
@@ -33,7 +48,7 @@ export default function FloorMap({ pins = defaultPins }: FloorMapProps) {
 
       {/* 휴게실 영역 오버레이 — 핀은 이 영역 기준 좌표 */}
       <div
-        className="absolute overflow-hidden"
+        className="absolute z-10"
         style={{
           left: `${LOUNGE_ZONE.left}%`,
           top: `${LOUNGE_ZONE.top}%`,
@@ -41,16 +56,62 @@ export default function FloorMap({ pins = defaultPins }: FloorMapProps) {
           height: `${LOUNGE_ZONE.height}%`,
         }}
       >
-        {pins.map((pin) => (
-          <div
-            key={pin.id}
-            className="absolute -translate-x-1/2 -translate-y-full drop-shadow-md"
-            style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
-          >
-            <LocationPinIcon variant={pin.type === 'sharing' ? 'primary' : 'secondary'} />
-          </div>
-        ))}
+        {pins.map((pin) => {
+          const isSelected = pin.id === selectedId
+          const chip = getChipConfig(pin.type, pin.isOwner)
+          return (
+            <div
+              key={pin.id}
+              className="absolute -translate-x-1/2 -translate-y-full cursor-pointer"
+              style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+              onPointerEnter={(e) => {
+                if (e.pointerType === 'mouse') setSelectedId(pin.id)
+              }}
+              onPointerLeave={(e) => {
+                if (e.pointerType === 'mouse')
+                  setSelectedId((prev) => (prev === pin.id ? null : prev))
+              }}
+              onClick={(e) => {
+                e.stopPropagation()
+                setSelectedId((prev) => (prev === pin.id ? null : pin.id))
+              }}
+            >
+              <div
+                className={`relative transition-transform duration-200 ${isSelected ? '-translate-y-2.5' : ''}`}
+              >
+                {isSelected && (
+                  <div className="absolute bottom-full left-1/2 mb-3.5 -translate-x-1/2 whitespace-nowrap">
+                    <StatusChip label={chip.label} variant={chip.variant} />
+                  </div>
+                )}
+                <LocationPinIcon variant={pin.type === 'sharing' ? 'primary' : 'secondary'} />
+              </div>
+            </div>
+          )
+        })}
       </div>
+
+      {/* 선택된 핀 아래 72px에 ItemList 카드 */}
+      {selectedPin && (
+        <div
+          className="absolute z-30 w-full px-4"
+          style={{
+            top: `calc(${LOUNGE_ZONE.top + (selectedPin.y / 100) * LOUNGE_ZONE.height}% + 10px)`,
+          }}
+        >
+          <ul className="w-full overflow-hidden rounded-xl shadow-2">
+            <ItemList
+              name={selectedPin.name}
+              status={selectedPin.type}
+              quantity={selectedPin.quantity}
+              unit={selectedPin.unit}
+              location={selectedPin.location}
+              image={selectedPin.image}
+              isOwner={selectedPin.isOwner}
+            />
+          </ul>
+        </div>
+      )}
     </div>
   )
 }
