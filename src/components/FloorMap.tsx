@@ -13,7 +13,7 @@ interface FloorMapProps {
 }
 
 // 전체 이미지 대비 휴게실 영역 비율 (시각적으로 확인 후 미세 조정 필요)
-const LOUNGE_ZONE = { left: 55, top: 40, width: 12, height: 18 }
+const LOUNGE_ZONE = { left: 52, top: 24, width: 20, height: 34 }
 
 // pin x, y는 휴게실 영역 내 0~100% 기준
 const defaultPins: LocationPin[] = [
@@ -24,11 +24,11 @@ const defaultPins: LocationPin[] = [
 
 export default function FloorMap({ pins = defaultPins }: FloorMapProps) {
   return (
-    <div className="relative h-full w-full">
+    <div className="relative w-full" style={{ aspectRatio: '1097 / 634' }}>
       <img
         src={floorMapImage}
         alt="층 평면도"
-        className="absolute inset-0 h-full w-full object-contain"
+        className="absolute inset-0 h-full w-full object-fill"
       />
 
       {/* 휴게실 영역 오버레이 — 핀은 이 영역 기준 좌표 */}
