@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import cameraIcon from '@/assets/register/camera.svg'
-import clearIcon from '@/assets/register/clear.svg'
+import removeImageIcon from '@/assets/register/remove-image.svg'
 import minusIcon from '@/assets/register/minus.svg'
 import plusIcon from '@/assets/register/plus.svg'
 import FloorToggle from '@/components/FloorToggle'
@@ -11,7 +11,9 @@ import Input from '@/components/Input'
 import TabBar from '@/components/TabBar'
 import Mainbutton from '@/components/icons/Mainbutton'
 import { useSharing } from '@/data/SharingProvider'
-import { CURRENT_USER_ID, FLOORS, TABS } from '@/data/sharingItems'
+import { CURRENT_USER_ID, TABS } from '@/data/sharingItems'
+import { FLOORS_BY_ZONE } from '@/constants/building'
+import { useBuildingStore } from '@/stores/buildingStore'
 
 const MAX_IMAGES = 10
 
@@ -30,10 +32,10 @@ function ImagePreview({ file, onRemove }: { file: File; onRemove: () => void }) 
       <button
         type="button"
         aria-label={`${file.name} 이미지 삭제`}
-        className="bg-gray-white absolute top-0 right-0 cursor-pointer rounded-full"
+        className="absolute top-1 right-1 size-3 cursor-pointer rounded-full"
         onClick={onRemove}
       >
-        <img src={clearIcon} alt="" />
+        <img src={removeImageIcon} alt="" />
       </button>
     </li>
   )
@@ -41,7 +43,9 @@ function ImagePreview({ file, onRemove }: { file: File; onRemove: () => void }) 
 
 export default function SharingRegisterPage() {
   const navigate = useNavigate()
-  const { building, floor, setFloor, addItem } = useSharing()
+  const { addItem } = useSharing()
+  const { selectedZone, activeFloor, setFloor } = useBuildingStore()
+  const floors = FLOORS_BY_ZONE[selectedZone]
   const picker = useRef<HTMLInputElement>(null)
   const nextImageId = useRef(0)
   const [images, setImages] = useState<{ id: number; file: File }[]>([])
@@ -59,7 +63,7 @@ export default function SharingRegisterPage() {
     name.trim().length > 0 &&
     quantity > 0 &&
     location.trim().length > 0 &&
-    FLOORS.includes(floor)
+    floors.includes(activeFloor)
 
   function addImages(event: ChangeEvent<HTMLInputElement>) {
     const selected = Array.from(event.currentTarget.files ?? [])
@@ -90,8 +94,8 @@ export default function SharingRegisterPage() {
       await addItem({
         id: crypto.randomUUID(),
         ownerId: CURRENT_USER_ID,
-        building,
-        floor,
+        building: selectedZone,
+        floor: activeFloor,
         images: images.map(({ file }) => file),
         name: name.trim(),
         quantity,
@@ -101,7 +105,6 @@ export default function SharingRegisterPage() {
         status: 'sharing',
         createdAt: new Date().toISOString(),
       })
-      setFloor(floor)
       navigate('/list', { replace: true })
     } catch {
       setSubmitError('물품을 저장하지 못했어요. 다시 시도해 주세요.')
@@ -112,14 +115,14 @@ export default function SharingRegisterPage() {
   return (
     <div className="bg-gray-white flex h-dvh w-full flex-col">
       <div className="shrink-0">
-        <Header building={`동소문행복기숙사 ${building}`} floor={floor} />
+        <Header />
         <TabBar
           tabs={TABS}
           activeTab="map"
           onTabChange={(tab) => navigate(tab === 'list' ? '/list' : '/', { replace: true })}
         />
         <div className="pt-3">
-          <FloorToggle floors={FLOORS} activeFloor={floor} onFloorChange={setFloor} />
+          <FloorToggle floors={floors} activeFloor={activeFloor} onFloorChange={setFloor} />
         </div>
       </div>
 
@@ -256,7 +259,7 @@ export default function SharingRegisterPage() {
             </p>
           )}
           <Mainbutton type="submit" fullWidth disabled={!canRegister || saving}>
-            {saving ? '저장 중…' : `${building} ${floor}층에 나눔 예약하기`}
+            {saving ? '저장 중…' : `${selectedZone} ${activeFloor}에 나눔 예약하기`}
           </Mainbutton>
         </div>
       </form>
