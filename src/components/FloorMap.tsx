@@ -18,6 +18,8 @@ export interface LocationPin {
   isOwner: boolean
 }
 
+type ReservationState = 'sharing' | 'reserved' | 'completed'
+
 interface FloorMapProps {
   pins?: LocationPin[]
   onPinSelect?: (id: string | null) => void
@@ -36,9 +38,17 @@ function getChipConfig(type: 'sharing' | 'completed', isOwner: boolean) {
   return { label: isOwner ? '나눔 완료' : '나눔 마감', variant: 'secondary' as const }
 }
 
+function getChipForReservation(rState: ReservationState, pin: LocationPin) {
+  if (pin.isOwner) return getChipConfig(pin.type, true)
+  if (rState === 'sharing') return { label: '나눔중', variant: 'primary' as const }
+  if (rState === 'reserved') return { label: '예약중', variant: 'secondary' as const }
+  return { label: '수령 완료', variant: 'secondary' as const }
+}
+
 export default function FloorMap({ pins = defaultPins, onPinSelect }: FloorMapProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [lockedId, setLockedId] = useState<string | null>(null)
+  const [reservations, setReservations] = useState<Record<string, ReservationState>>({})
   const selectedId = lockedId ?? hoveredId
   const selectedPin = pins.find((p) => p.id === selectedId) ?? null
 
@@ -48,6 +58,14 @@ export default function FloorMap({ pins = defaultPins, onPinSelect }: FloorMapPr
 
   function lock(id: string | null) {
     setLockedId(id)
+  }
+
+  function reserve(id: string) {
+    setReservations((prev) => ({ ...prev, [id]: 'reserved' }))
+  }
+
+  function complete(id: string) {
+    setReservations((prev) => ({ ...prev, [id]: 'completed' }))
   }
 
   return (
@@ -70,7 +88,8 @@ export default function FloorMap({ pins = defaultPins, onPinSelect }: FloorMapPr
       >
         {pins.map((pin) => {
           const isSelected = pin.id === selectedId
-          const chip = getChipConfig(pin.type, pin.isOwner)
+          const rState = reservations[pin.id] ?? (pin.type === 'sharing' ? 'sharing' : 'completed')
+          const chip = getChipForReservation(rState as ReservationState, pin)
           return (
             <div
               key={pin.id}
@@ -102,33 +121,49 @@ export default function FloorMap({ pins = defaultPins, onPinSelect }: FloorMapPr
         })}
       </div>
 
-      {/* 선택된 핀 아래 72px에 ItemList 카드 */}
-      {selectedPin && (
-        <div
-          className="absolute z-30 w-full px-4"
-          style={{
-            top: `calc(${LOUNGE_ZONE.top + (selectedPin.y / 100) * LOUNGE_ZONE.height}% + 10px)`,
-          }}
-        >
-          <ul className="w-full overflow-hidden rounded-xl shadow-2">
-            <ItemList
-              name={selectedPin.name}
-              status={selectedPin.type}
-              quantity={selectedPin.quantity}
-              unit={selectedPin.unit}
-              location={selectedPin.location}
-              image={selectedPin.image}
-              isOwner={selectedPin.isOwner}
-            />
-          </ul>
-          {selectedPin.type === 'sharing' && !selectedPin.isOwner && (
-            <div className="mt-4 flex gap-2">
-              <SubButton label="예약하기" variant="main" className="flex-1" />
-              <SubButton label="수령완료" variant="sub" className="flex-1" />
-            </div>
-          )}
-        </div>
-      )}
+      {/* 선택된 핀 아래 ItemList 카드 */}
+      {selectedPin && (() => {
+        const rState: ReservationState = reservations[selectedPin.id] ?? 'sharing'
+        return (
+          <div
+            className="absolute z-30 w-full px-4"
+            style={{
+              top: `calc(${LOUNGE_ZONE.top + (selectedPin.y / 100) * LOUNGE_ZONE.height}% + 10px)`,
+            }}
+          >
+            <ul className="w-full overflow-hidden rounded-xl shadow-2">
+              <ItemList
+                name={selectedPin.name}
+                status={rState === 'sharing' ? 'sharing' : rState === 'reserved' ? 'reserved' : 'completed'}
+                quantity={selectedPin.quantity}
+                unit={selectedPin.unit}
+                location={selectedPin.location}
+                image={selectedPin.image}
+                isOwner={selectedPin.isOwner}
+                isReserver={rState !== 'sharing'}
+              />
+            </ul>
+            {selectedPin.type === 'sharing' && !selectedPin.isOwner && (
+              <div className="mt-4 flex gap-2" onClick={(e) => e.stopPropagation()}>
+                <SubButton
+                  label="예약하기"
+                  variant="main"
+                  className="flex-1"
+                  disabled={rState !== 'sharing'}
+                  onClick={() => reserve(selectedPin.id)}
+                />
+                <SubButton
+                  label="수령완료"
+                  variant="sub"
+                  className="flex-1"
+                  disabled={rState !== 'reserved'}
+                  onClick={() => complete(selectedPin.id)}
+                />
+              </div>
+            )}
+          </div>
+        )
+      })()}
     </div>
   )
 }
