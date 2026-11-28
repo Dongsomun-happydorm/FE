@@ -32,7 +32,7 @@ export default function Input({
         disabled={disabled}
         value={value}
         onChange={(event) => onChange(event.currentTarget.value)}
-        className={`min-w-0 flex-1 bg-transparent outline-none placeholder:text-gray-500 ${value ? 'typography-body2-medium text-gray-900 enabled:focus:font-normal enabled:focus:text-gray-500' : 'typography-body2-regular text-gray-500'}`}
+        className={`min-w-0 flex-1 bg-transparent outline-none placeholder:text-gray-500 ${value ? 'typography-body2-medium text-gray-900' : 'typography-body2-regular text-gray-500'}`}
       />
       {value && !disabled && (
         <button
