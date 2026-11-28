@@ -11,7 +11,9 @@ export default function Header() {
   return (
     <div className="flex h-13.5 items-center justify-between bg-white px-4">
       <div className="flex items-center gap-2">
-        <LocationPinIcon />
+        <Link to="/" aria-label="나눔 지도" className="cursor-pointer">
+          <LocationPinIcon />
+        </Link>
         <div className="flex items-center gap-1">
           <span className="typography-body1-semibold text-gray-900 whitespace-nowrap">
             {BUILDING_NAME} {selectedZone} {activeFloor}
