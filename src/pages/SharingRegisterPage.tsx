@@ -3,8 +3,8 @@ import type { ChangeEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import cameraIcon from '@/assets/register/camera.svg'
 import removeImageIcon from '@/assets/register/remove-image.svg'
-import minusIcon from '@/assets/register/minus.svg'
-import plusIcon from '@/assets/register/plus.svg'
+import MinusIcon from '@/components/icons/MinusIcon'
+import PlusIcon from '@/components/icons/PlusIcon'
 import FloorToggle from '@/components/FloorToggle'
 import Header from '@/components/Header'
 import Input from '@/components/Input'
@@ -196,13 +196,13 @@ export default function SharingRegisterPage() {
                 aria-label="수량 감소"
                 disabled={quantity === 0}
                 onClick={() => setQuantity((amount) => Math.max(0, amount - 1))}
-                className="flex size-6 items-center justify-center rounded-md bg-gray-100 enabled:cursor-pointer"
+                className="group flex size-6 items-center justify-center rounded-md bg-gray-100 text-gray-400 enabled:cursor-pointer enabled:hover:bg-primary-50"
               >
-                <img src={minusIcon} alt="" />
+                <MinusIcon className="group-enabled:group-hover:text-primary-200" />
               </button>
               <output
                 aria-label="물품 수량"
-                className="typography-body1-semibold grid h-8 min-w-8 place-items-center text-gray-700"
+                className={`typography-body1-semibold grid h-8 min-w-8 place-items-center ${quantity >= 1 ? 'text-primary-500' : 'text-gray-700'}`}
               >
                 {quantity}
               </output>
@@ -210,9 +210,9 @@ export default function SharingRegisterPage() {
                 type="button"
                 aria-label="수량 증가"
                 onClick={() => setQuantity((amount) => amount + 1)}
-                className="flex size-6 cursor-pointer items-center justify-center rounded-md bg-gray-100"
+                className={`group flex size-6 cursor-pointer items-center justify-center rounded-md hover:bg-primary-50 ${quantity >= 1 ? 'bg-primary-100 text-primary-400' : 'bg-gray-100 text-gray-400'}`}
               >
-                <img src={plusIcon} alt="" />
+                <PlusIcon className="group-hover:text-primary-200" />
               </button>
             </div>
           </div>
