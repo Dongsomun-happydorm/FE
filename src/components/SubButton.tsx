@@ -9,13 +9,13 @@ interface SubButtonProps {
 const variantStyles = {
   main: {
     base: 'bg-secondary-500 text-primary-50',
-    hover: 'hover:bg-secondary-600',
-    disabled: 'bg-gray-100 text-gray-400',
+    hover: 'hover:bg-secondary-400',
+    disabled: 'bg-secondary-500 text-primary-50 opacity-40',
   },
   sub: {
     base: 'bg-secondary-100 text-secondary-500',
     hover: 'hover:bg-secondary-200',
-    disabled: 'bg-gray-100 text-gray-400',
+    disabled: 'bg-secondary-100 text-secondary-500 opacity-40',
   },
 }
 
