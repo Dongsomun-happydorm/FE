@@ -4,6 +4,7 @@ import LocationPinIcon from '@/components/icons/LocationPinIcon'
 import StatusChip from '@/components/StatusChip'
 import ItemList from '@/components/ItemList'
 import SubButton from '@/components/SubButton'
+import ConfirmDeleteModal from '@/components/ConfirmDeleteModal'
 
 export interface LocationPin {
   id: string
@@ -23,6 +24,7 @@ type ReservationState = 'sharing' | 'reserved' | 'completed'
 interface FloorMapProps {
   pins?: LocationPin[]
   onPinSelect?: (id: string | null) => void
+  onRemovePin?: (id: string) => void
 }
 
 const LOUNGE_ZONE = { left: 52, top: 24, width: 20, height: 34 }
@@ -45,10 +47,11 @@ function getChipForReservation(rState: ReservationState, pin: LocationPin) {
   return { label: '수령 완료', variant: 'secondary' as const }
 }
 
-export default function FloorMap({ pins = defaultPins, onPinSelect }: FloorMapProps) {
+export default function FloorMap({ pins = defaultPins, onPinSelect, onRemovePin }: FloorMapProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [lockedId, setLockedId] = useState<string | null>(null)
   const [reservations, setReservations] = useState<Record<string, ReservationState>>({})
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
   const selectedId = lockedId ?? hoveredId
   const selectedPin = pins.find((p) => p.id === selectedId) ?? null
 
@@ -141,6 +144,7 @@ export default function FloorMap({ pins = defaultPins, onPinSelect }: FloorMapPr
                 image={selectedPin.image}
                 isOwner={selectedPin.isOwner}
                 isReserver={rState !== 'sharing'}
+                onClose={() => setPendingDeleteId(selectedPin.id)}
               />
             </ul>
             {selectedPin.type === 'sharing' && !selectedPin.isOwner && (
@@ -164,6 +168,16 @@ export default function FloorMap({ pins = defaultPins, onPinSelect }: FloorMapPr
           </div>
         )
       })()}
+      {pendingDeleteId && (
+        <ConfirmDeleteModal
+          onCancel={() => setPendingDeleteId(null)}
+          onConfirm={() => {
+            onRemovePin?.(pendingDeleteId)
+            setPendingDeleteId(null)
+            lock(null)
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -38,7 +38,7 @@ export default function SharingMapPage() {
   const navigate = useNavigate()
   const { selectedZone, activeFloor, setFloor } = useBuildingStore()
   const floors = FLOORS_BY_ZONE[selectedZone]
-  const { items } = useSharing()
+  const { items, removeItem } = useSharing()
   const floorItems = itemsForToday(items, selectedZone, activeFloor)
   const [pinSelected, setPinSelected] = useState(false)
   const pins = floorItems
@@ -60,7 +60,7 @@ export default function SharingMapPage() {
         오늘 하루동안 기숙사 휴게실에서 오간 나눔을 한눈에 확인해 보세요
       </p>
       <div className="relative flex-1 overflow-hidden pt-50">
-        <FloorMap pins={pins} onPinSelect={(id) => setPinSelected(id !== null)} />
+        <FloorMap pins={pins} onPinSelect={(id) => setPinSelected(id !== null)} onRemovePin={removeItem} />
         {!pinSelected && <FloatingButton label="나눔 등록" onClick={() => navigate('/register')} />}
         <SharingStatusCards
           sharingCount={floorItems.filter((item) => item.status === 'sharing').length}

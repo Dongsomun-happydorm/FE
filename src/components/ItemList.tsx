@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import placeholder from '@/assets/list/item-placeholder.png'
+import clearIcon from '@/assets/register/clear.svg'
 import StatusChip from '@/components/StatusChip'
 
 export type ItemStatus = 'sharing' | 'completed' | 'reserved' | 'closed'
@@ -14,6 +15,7 @@ export interface ItemListProps {
   isOwner?: boolean
   isReserver?: boolean
   bg?: string
+  onClose?: () => void
 }
 
 function getChipConfig(
@@ -62,6 +64,7 @@ export default function ItemList({
   isOwner = false,
   isReserver = false,
   bg,
+  onClose,
 }: ItemListProps) {
   const chip = getChipConfig(status, isOwner, isReserver)
   const [preview, setPreview] = useState('')
@@ -75,8 +78,18 @@ export default function ItemList({
 
   return (
     <li
-      className={`flex min-h-[85px] items-center gap-2 rounded-xl px-4 ${bg ?? backgroundColor[status]}`}
+      className={`relative flex min-h-[85px] items-center gap-2 rounded-xl px-4 ${bg ?? backgroundColor[status]}`}
     >
+      {status === 'sharing' && isOwner && bg === undefined && (
+        <button
+          type="button"
+          aria-label="나눔 취소"
+          onClick={onClose}
+          className="absolute top-2 right-2 cursor-pointer"
+        >
+          <img src={clearIcon} alt="" className="size-4" />
+        </button>
+      )}
       <img
         src={(typeof image === 'string' ? image : preview) || placeholder}
         alt={name}

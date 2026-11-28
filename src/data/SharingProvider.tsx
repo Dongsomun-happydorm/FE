@@ -7,6 +7,7 @@ import { readSharingItems, saveSharingItem } from './sharingStorage'
 interface SharingContextValue {
   items: SharingItem[]
   addItem: (item: SharingItem) => Promise<void>
+  removeItem: (id: string) => void
 }
 
 const SharingContext = createContext<SharingContextValue | null>(null)
@@ -18,7 +19,7 @@ export function useSharing() {
 }
 
 export default function SharingProvider({ children }: { children: ReactNode }) {
-  const [mockItems] = useState(createMockItems)
+  const [mockItems, setMockItems] = useState(createMockItems)
   const [registrations, setRegistrations] = useState<SharingItem[]>([])
 
   useEffect(() => {
@@ -44,11 +45,17 @@ export default function SharingProvider({ children }: { children: ReactNode }) {
     setRegistrations((current) => [item, ...current.filter(({ id }) => id !== item.id)])
   }
 
+  function removeItem(id: string) {
+    setRegistrations((current) => current.filter((item) => item.id !== id))
+    setMockItems((current) => current.filter((item) => item.id !== id))
+  }
+
   return (
     <SharingContext.Provider
       value={{
         items: [...registrations, ...mockItems],
         addItem,
+        removeItem,
       }}
     >
       {children}
