@@ -1,12 +1,12 @@
 interface FloorToggleProps {
-  floors: number[]
-  activeFloor: number
-  onFloorChange: (floor: number) => void
+  floors: string[]
+  activeFloor: string
+  onFloorChange: (floor: string) => void
 }
 
 export default function FloorToggle({ floors, activeFloor, onFloorChange }: FloorToggleProps) {
   return (
-    <div className="flex items-center gap-3 overflow-x-auto px-4 py-3 scrollbar-none">
+    <div className="flex items-center gap-3 overflow-x-auto px-4 py-4 scrollbar-none">
       {floors.map((floor) => {
         const isActive = floor === activeFloor
         return (
@@ -19,7 +19,7 @@ export default function FloorToggle({ floors, activeFloor, onFloorChange }: Floo
                 : 'border-[0.5px] border-gray-100 bg-gray-50 text-gray-600 hover:border-primary-500 hover:text-primary-500'
             }`}
           >
-            {floor}F
+            {floor}
           </button>
         )
       })}
